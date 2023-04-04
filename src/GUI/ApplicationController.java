@@ -21,15 +21,16 @@ public class ApplicationController extends Application {
     public void start(Stage window) throws Exception {
         this.window = window;
         BorderPane layout = new BorderPane();
-
         VBox list = new VBox();
+
+        //add more scenes 
 
         list.getChildren().add(new Label("Group 12"));
         list.getChildren().add(new Label("Ivan van Dijk & Tido Koldenhof"));
         HBox buttons = new HBox();
         Button Courses = new Button("Test Button");
        
-        buttons.getChildren().addAll(Courses);
+        buttons.getChildren().addAll(Courses /* add the new scenes */);
         list.getChildren().add(buttons);
         layout.setCenter(list);
         this.index = new Scene(layout);
