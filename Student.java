@@ -3,7 +3,7 @@ public class Student {
     private String email;
     private String name;
     private String birthday;
-    private String sex;
+    private String gender;
     private String adress;
     private String residence;
     private String country;
@@ -36,12 +36,12 @@ public class Student {
         this.birthday = birthday;
     }
 
-    public String getSex() {
-        return this.sex;
+    public String getGender() {
+        return this.gender;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getAdress() {
