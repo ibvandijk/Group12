@@ -45,6 +45,8 @@ public class CursistController extends Application {
         genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
 
         table.getColumns().addAll(emailCol, firstNameCol, lastNameCol, birthDateCol, genderCol);
+
+        //data invullen
     }
 
     public Scene Cursists(){
@@ -52,13 +54,13 @@ public class CursistController extends Application {
         Scene Cursists = new Scene(layout);
         layout.setLeft(table);
 
-            Button add = new Button("voeg cursist toe");
-            Button delete = new Button("verwijder");
-            Button Back = new Button("ga terug");
-            Button view = new Button("bekijk cursist");
+            Button add = new Button("Add");
+            Button delete = new Button("Delete");
+            Button Back = new Button("Back");
+            Button view = new Button("View");
             HBox buttons = new HBox();
             buttons.getChildren().addAll(Back, add, view, delete);
-
+            layout.setTop(buttons);
             return Cursists;
     }
 }
