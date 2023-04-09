@@ -15,6 +15,9 @@ import javafx.scene.control.Button;
 public class ApplicationController extends Application {
     Scene index;
 
+    //Scene courses = new CourseController();
+    Scene cursists = new CursistController().Cursists();
+
     Stage window;
 
     @Override
@@ -22,15 +25,19 @@ public class ApplicationController extends Application {
         this.window = window;
         BorderPane layout = new BorderPane();
         VBox list = new VBox();
+        HBox buttons = new HBox();
 
         //add more scenes 
+        Button Cursists = new Button("Cursisten zien en wijzigen");
+        Cursists.setOnAction((Action) -> {
+            window.setScene(cursists);
+        });
+        // Button cursists = new Button("cursisten zien en wijzigen");
+        // cursists.setOnAction((Action) -> {
+        //     window.setScene(this.cursists);
+        // });
 
-        list.getChildren().add(new Label("Group 12"));
-        list.getChildren().add(new Label("Ivan van Dijk & Tido Koldenhof"));
-        HBox buttons = new HBox();
-        Button Courses = new Button("Test Button");
-       
-        buttons.getChildren().addAll(Courses /* add the new scenes */);
+        buttons.getChildren().addAll(Cursists /* add the new scene buttons */);
         list.getChildren().add(buttons);
         layout.setCenter(list);
         this.index = new Scene(layout);
