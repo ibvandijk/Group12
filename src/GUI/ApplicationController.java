@@ -8,14 +8,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
-
-
-
+import Datastorage.DatabaseConnection;
 
 public class ApplicationController extends Application {
     Scene index;
 
-    //Scene courses = new CourseController();
+    // Scene courses = new CourseController();
     Scene cursists = new CursistController().Cursists();
 
     Stage window;
@@ -27,14 +25,19 @@ public class ApplicationController extends Application {
         VBox list = new VBox();
         HBox buttons = new HBox();
 
-        //add more scenes 
+        DatabaseConnection db = new DatabaseConnection();
+        db.openConnection();
+        System.out.println(db.executeSQLSelectStatement("SELECT * FROM Student"));
+        db.closeConnection();
+
+        // add more scenes
         Button Cursists = new Button("Cursisten zien en wijzigen");
         Cursists.setOnAction((Action) -> {
             window.setScene(cursists);
         });
         // Button cursists = new Button("cursisten zien en wijzigen");
         // cursists.setOnAction((Action) -> {
-        //     window.setScene(this.cursists);
+        // window.setScene(this.cursists);
         // });
 
         buttons.getChildren().addAll(Cursists /* add the new scene buttons */);
