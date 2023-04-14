@@ -20,45 +20,46 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 
 public class CursistController extends Application {
     private DatabaseConnection dbConnection = new DatabaseConnection();
 
-
     private TableView<Cursist> table = new TableView<Cursist>();
 
     // Create column UserName (Data type of String).
-    private TableColumn<Cursist, String> emailCol = new TableColumn<Cursist, String>("E-mail");
+    private TableColumn<Cursist, String> emailCol = new TableColumn<>("email");
 
     // Create 2 columns for Name.
-    private TableColumn<Cursist, String> nameCol = new TableColumn<Cursist, String>("Name");
+    private TableColumn<Cursist, String> nameCol = new TableColumn<>("name");
 
     // Create column birthdate (Data type of Date)
-    private TableColumn<Cursist, String> birthDateCol = new TableColumn<Cursist, String>("Birth Date");
+    private TableColumn<Cursist, Date> birthDateCol = new TableColumn<>("birthDate");
 
-    // Create column Gender
-    private TableColumn<Cursist, String> genderCol = new TableColumn<Cursist, String>("Sex");
+    // Create column Sex
+    private TableColumn<Cursist, String> sexCol = new TableColumn<>("sex");
 
-    @Override
-    public void start(Stage stage) throws Exception {
-    }
 
     public CursistController() {
         dbConnection.openConnection();
 
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        birthDateCol.setCellValueFactory(new PropertyValueFactory<>("birth-date"));
-        genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        emailCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("email"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("name"));
+        birthDateCol.setCellValueFactory(new PropertyValueFactory<Cursist, Date>("birthDay"));
+        sexCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("sex"));
 
-        table.getColumns().addAll(emailCol, nameCol, birthDateCol, genderCol);
+        table.getColumns().addAll(emailCol, nameCol, birthDateCol, sexCol);
+    }
 
-        
-        ResultSet resultSet = dbConnection.executeSQLSelectStatement("SELECT * FROM Student");
-
+    public Scene Cursists(){
+        BorderPane layout = new BorderPane();
+        Scene cursists = new Scene(layout);
 
         try {
+            ResultSet resultSet = dbConnection.executeSQLSelectStatement("SELECT * FROM Student");
+
             while (resultSet.next()) {
 
                 String email = resultSet.getString("Email");
@@ -68,19 +69,12 @@ public class CursistController extends Application {
                 String adress = resultSet.getString("Adress");
                 String country = resultSet.getString("Country");
 
-                int id = resultSet.getInt("id");
-                table.getItems()
-                        .add(new Cursist(email, name, birthDate, sex, adress, country));
+                Cursist temp = new Cursist(email, name, birthDate, sex, adress, country);
+                table.getItems().add(temp);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public Scene Cursists(){
-        BorderPane layout = new BorderPane();
-        Scene Cursists = new Scene(layout);
-        layout.setLeft(table);
+
+            layout.setLeft(table);
 
             Button add = new Button("Add");
             Button delete = new Button("Delete");
@@ -89,6 +83,15 @@ public class CursistController extends Application {
             HBox buttons = new HBox();
             buttons.getChildren().addAll(Back, add, view, delete);
             layout.setTop(buttons);
-            return Cursists;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+       return cursists;
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
     }
 }
