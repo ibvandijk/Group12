@@ -25,20 +25,11 @@ public class ApplicationController extends Application {
         VBox list = new VBox();
         HBox buttons = new HBox();
 
-        DatabaseConnection db = new DatabaseConnection();
-        db.openConnection();
-        System.out.println(db.executeSQLSelectStatement("SELECT * FROM Student"));
-        db.closeConnection();
-
         // add more scenes
         Button Cursists = new Button("Cursisten zien en wijzigen");
         Cursists.setOnAction((Action) -> {
             window.setScene(cursists);
         });
-        // Button cursists = new Button("cursisten zien en wijzigen");
-        // cursists.setOnAction((Action) -> {
-        // window.setScene(this.cursists);
-        // });
 
         buttons.getChildren().addAll(Cursists /* add the new scene buttons */);
         list.getChildren().add(buttons);
