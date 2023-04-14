@@ -1,6 +1,7 @@
 package GUI;
 
 import Model.Cursist;
+import Datastorage.DatabaseConnection;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -15,17 +16,23 @@ import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Date;
+
 
 
 public class CursistController extends Application {
+    private DatabaseConnection dbConnection = new DatabaseConnection();
+
+
     private TableView<Cursist> table = new TableView<Cursist>();
 
     // Create column UserName (Data type of String).
     private TableColumn<Cursist, String> emailCol = new TableColumn<Cursist, String>("E-mail");
 
     // Create 2 columns for Name.
-    private TableColumn<Cursist, String> firstNameCol = new TableColumn<Cursist, String>("First Name");
-    private TableColumn<Cursist, String> lastNameCol = new TableColumn<Cursist, String>("Last Name");
+    private TableColumn<Cursist, String> nameCol = new TableColumn<Cursist, String>("Name");
 
     // Create column birthdate (Data type of Date)
     private TableColumn<Cursist, String> birthDateCol = new TableColumn<Cursist, String>("Birth Date");
@@ -38,15 +45,36 @@ public class CursistController extends Application {
     }
 
     public CursistController() {
+        dbConnection.openConnection();
+
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-        firstNameCol.setCellValueFactory(new PropertyValueFactory<>("first-name"));
-        lastNameCol.setCellValueFactory(new PropertyValueFactory<>("last-name"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         birthDateCol.setCellValueFactory(new PropertyValueFactory<>("birth-date"));
         genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
 
-        table.getColumns().addAll(emailCol, firstNameCol, lastNameCol, birthDateCol, genderCol);
+        table.getColumns().addAll(emailCol, nameCol, birthDateCol, genderCol);
 
-        //data invullen
+        
+        ResultSet resultSet = dbConnection.executeSQLSelectStatement("SELECT * FROM Student");
+
+
+        try {
+            while (resultSet.next()) {
+
+                String email = resultSet.getString("Email");
+                String name = resultSet.getString("Name");
+                Date birthDate = resultSet.getDate("Birthday");
+                String sex = resultSet.getString("Sex");
+                String adress = resultSet.getString("Adress");
+                String country = resultSet.getString("Country");
+
+                int id = resultSet.getInt("id");
+                table.getItems()
+                        .add(new Cursist(email, name, birthDate, sex, adress, country));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Scene Cursists(){

@@ -3,17 +3,15 @@ import java.sql.Date;
 
 public class Cursist {
    private String email;
-   private String firstName;
-   private String lastName;
+   private String name;
    private Date birthDate;
    private String sex;
    private String adress;
    private String country;
 
-   public Cursist(String email, String firstName, String lastName, Date birthDate, String sex, String adress, String country){
+   public Cursist(String email, String name, Date birthDate, String sex, String adress, String country){
      email = this.email;
-     firstName = this.firstName;
-     lastName = this. lastName;
+     name = this.name;
      birthDate = this.birthDate;
      sex = this.sex;
      adress = this.adress;
@@ -28,20 +26,12 @@ public class Cursist {
         this.email = email;
     }
 
-    public String getFirstName() {
-        return this.firstName;
+    public String getName() {
+        return this.name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return this.lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastName(String name) {
+        this.name = name;
     }
 
     public Date getBirthDate() {
