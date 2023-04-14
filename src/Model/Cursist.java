@@ -4,18 +4,22 @@ import java.sql.Date;
 public class Cursist {
    private String email;
    private String name;
-   private Date birthDate;
+   private Date birthDay;
    private String sex;
    private String adress;
    private String country;
 
-   public Cursist(String email, String name, Date birthDate, String sex, String adress, String country){
-     email = this.email;
-     name = this.name;
-     birthDate = this.birthDate;
-     sex = this.sex;
-     adress = this.adress;
-     country = this.adress;
+    public Cursist(){
+
+    }
+
+    public Cursist(String email, String name, Date birthDay, String sex, String adress, String country){
+    this.email = email;
+    this.name = name;
+    this.birthDay = birthDay;
+    this.sex = sex;
+    this.adress = adress;
+    this.country = country;
     }
 
     public String getEmail() {
@@ -34,12 +38,12 @@ public class Cursist {
         this.name = name;
     }
 
-    public Date getBirthDate() {
-        return this.birthDate;
+    public Date getBirthDay() {
+        return this.birthDay;
     }
 
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
     }
 
     public String getSex() {
