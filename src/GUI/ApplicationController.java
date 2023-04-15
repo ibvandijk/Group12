@@ -15,6 +15,7 @@ public class ApplicationController extends Application {
 
     // Scene courses = new CourseController();
     Scene cursists = new CursistController().Cursists();
+    Scene courses = new CourseController().Courses();
 
     Stage window;
 
@@ -31,7 +32,12 @@ public class ApplicationController extends Application {
             window.setScene(cursists);
         });
 
-        buttons.getChildren().addAll(Cursists /* add the new scene buttons */);
+        Button Cursussen = new Button("Cursussen zien en wijzigen");
+        Cursussen.setOnAction((Action) -> {
+            window.setScene(courses);
+        });
+
+        buttons.getChildren().addAll(Cursists, Cursussen /* add the new scene buttons */);
         list.getChildren().add(buttons);
         layout.setCenter(list);
         this.index = new Scene(layout);
