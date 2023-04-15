@@ -21,7 +21,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -33,7 +32,6 @@ import javafx.event.EventHandler;
 import java.util.Calendar;
 
 import javafx.scene.Node;
-
 
 public class CursistController extends Application {
     private DatabaseConnection dbConnection = new DatabaseConnection();
@@ -52,14 +50,13 @@ public class CursistController extends Application {
     // Create column Sex
     private TableColumn<Cursist, String> sexCol = new TableColumn<>("sex");
 
-
     public CursistController() {
         dbConnection.openConnection();
     }
 
-    public Scene Cursists(){
+    public Scene Cursists() {
         BorderPane layout = new BorderPane();
-        Scene cursists = new Scene(layout, 500,500);
+        Scene cursists = new Scene(layout, 500, 500);
 
         table = new TableView<Cursist>();
         emailCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("email"));
@@ -83,7 +80,6 @@ public class CursistController extends Application {
                 Cursist temp = new Cursist(email, name, birthDate, sex, adress, country);
                 table.getItems().add(temp);
             }
-
 
             layout.setCenter(table);
 
@@ -139,12 +135,11 @@ public class CursistController extends Application {
     public void start(Stage stage) throws Exception {
     }
 
-    public Scene addCursist(){
+    public Scene addCursist() {
         GridPane grid = new GridPane();
 
         Text scenetitle = new Text("Nieuw Student toevoegen:");
         grid.add(scenetitle, 0, 0, 2, 1);
-
 
         // email input form
         Label email = new Label("E-mail Student:");
@@ -186,19 +181,18 @@ public class CursistController extends Application {
         Button submit = new Button("Voeg toe");
         grid.getChildren().add(submit);
 
-        
-
-        
         submit.setOnAction((EventHandler) -> {
             System.out.println(birthDayTextField.getText());
 
-            dbConnection.executeSQLUpdateStatement(String.format("INSERT INTO Student (Email, Name, Birthday, Sex, Adress, Country) VALUES ( '%1$s' , '%2$s' , '%3$s' , '%4$s' , '%5$s' , '%6$s' )",
-            emailTextField.getText(), nameTextField.getText(), birthDayTextField.getText(), SexTextField.getText(), adressTextField.getText(), countryTextField.getText()));
+            dbConnection.executeSQLUpdateStatement(String.format(
+                    "INSERT INTO Student (Email, Name, Birthday, Sex, Adress, Country) VALUES ( '%1$s' , '%2$s' , '%3$s' , '%4$s' , '%5$s' , '%6$s' )",
+                    emailTextField.getText(), nameTextField.getText(), birthDayTextField.getText(),
+                    SexTextField.getText(), adressTextField.getText(), countryTextField.getText()));
 
             Node node = (Node) EventHandler.getSource();
             Stage thisStage = (Stage) node.getScene().getWindow();
             thisStage.close();
-            
+
             Stage stage = new Stage();
             stage.setScene(Cursists());
             stage.show();
@@ -208,18 +202,17 @@ public class CursistController extends Application {
         return new Scene(grid);
     }
 
-    public void removeCursist(){
+    public void removeCursist() {
         Cursist toRemove;
         toRemove = table.getSelectionModel().getSelectedItem();
 
-        
-
-        dbConnection.executeSQLUpdateStatement(String.format("DELETE FROM Student WHERE Email = '%1$s' AND Name = '%2$s' AND Birthday = '%3$s' AND Sex = '%4$s' AND Adress = '%5$s' AND Country = '%6$s';",
-         toRemove.getEmail(), toRemove.getName(), toRemove.getBirthDay(), toRemove.getSex(), toRemove.getAdress(), toRemove.getCountry()));
+        dbConnection.executeSQLUpdateStatement(String.format(
+                "DELETE FROM Student WHERE Email = '%1$s' AND Name = '%2$s' AND Birthday = '%3$s' AND Sex = '%4$s' AND Adress = '%5$s' AND Country = '%6$s';",
+                toRemove.getEmail(), toRemove.getName(), toRemove.getBirthDay(), toRemove.getSex(),
+                toRemove.getAdress(), toRemove.getCountry()));
 
         Cursists();
     }
-
 
     private TableView<Course> courseTable = new TableView<Course>();
     private TableColumn<Course, String> courseNameCol = new TableColumn<>("courseName");
@@ -227,7 +220,7 @@ public class CursistController extends Application {
     private TableColumn<Course, String> courseIntroductionCol = new TableColumn<>("introductionText");
     private TableColumn<Course, Integer> courseDifficultyCol = new TableColumn<>("difficulty");
 
-    public Scene viewCursist(Cursist cursist){
+    public Scene viewCursist(Cursist cursist) {
         BorderPane layout = new BorderPane();
 
         Button back = new Button("Back");
@@ -252,8 +245,9 @@ public class CursistController extends Application {
         courseTable.getColumns().addAll(courseNameCol, courseSubjectCol, courseIntroductionCol, courseDifficultyCol);
 
         try {
-            ResultSet resultSet = dbConnection.executeSQLSelectStatement(String.format("SELECT * FROM Course WHERE CourseName IN (SELECT CourseName FROM Enrollment WHERE StudentEmail = '%s');",
-            cursist.getEmail()));
+            ResultSet resultSet = dbConnection.executeSQLSelectStatement(String.format(
+                    "SELECT * FROM Course WHERE CourseName IN (SELECT CourseName FROM Enrollment WHERE StudentEmail = '%s');",
+                    cursist.getEmail()));
 
             while (resultSet.next()) {
 
@@ -262,10 +256,10 @@ public class CursistController extends Application {
                 String introduction = resultSet.getString("IntroductionText");
                 int difficulty = resultSet.getInt("Difficulty");
 
-                Course temp = new Course(subject, name, introduction, difficulty);
+                Course temp = new Course(subject, name, introduction, difficulty, 0);
                 courseTable.getItems().add(temp);
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -276,5 +270,3 @@ public class CursistController extends Application {
     }
 
 }
-
-
