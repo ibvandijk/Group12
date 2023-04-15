@@ -16,6 +16,7 @@ public class ApplicationController extends Application {
     // Scene courses = new CourseController();
     Scene cursists = new CursistController().Cursists();
     Scene courses = new CourseController().Courses();
+    Scene progressOnModules = new StudentModuleProgressController().viewModule();
 
     Stage window;
 
@@ -37,7 +38,12 @@ public class ApplicationController extends Application {
             window.setScene(courses);
         });
 
-        buttons.getChildren().addAll(Cursists, Cursussen /* add the new scene buttons */);
+        Button progress = new Button("Gemiddeld progress bekijken per module");
+        progress.setOnAction((Action) -> {
+            window.setScene(progressOnModules);
+        });
+
+        buttons.getChildren().addAll(Cursists, Cursussen, progress /* add the new scene buttons */);
         list.getChildren().add(buttons);
         layout.setCenter(list);
         this.index = new Scene(layout);
