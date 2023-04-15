@@ -6,14 +6,16 @@ public class Course {
     private String subject;
     private String introductionText;
     private int difficulty;
+    private int numStudentsWithFullProgress = 0;
 
-    public Course(String courseName, String subject, String introductionText, int difficulty) {
+    public Course(String courseName, String subject, String introductionText, int difficulty,
+            int numStudentsWithFullProgress) {
         this.courseName = courseName;
         this.subject = subject;
         this.introductionText = introductionText;
         this.difficulty = difficulty;
+        this.numStudentsWithFullProgress = numStudentsWithFullProgress;
     }
-
 
     public String getCourseName() {
         return courseName;
@@ -45,5 +47,13 @@ public class Course {
 
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public int getNumStudentsWithFullProgress() {
+        return this.numStudentsWithFullProgress;
+    }
+
+    public void setNumStudentsWithFullProgress(int numStudentsWithFullProgress) {
+        this.numStudentsWithFullProgress = numStudentsWithFullProgress;
     }
 }

@@ -45,6 +45,8 @@ public class CourseController extends Application {
 
     private TableColumn<Course, Integer> difficultyCol = new TableColumn<>("difficulty");
 
+    private TableColumn<Course, Integer> finishCountCol = new TableColumn<>("numStudentsWithFullProgress");
+
     public CourseController() {
         dbConnection.openConnection();
 
@@ -52,8 +54,9 @@ public class CourseController extends Application {
         subjectCol.setCellValueFactory(new PropertyValueFactory<Course, String>("subject"));
         introductionCol.setCellValueFactory(new PropertyValueFactory<Course, String>("introductionText"));
         difficultyCol.setCellValueFactory(new PropertyValueFactory<Course, Integer>("difficulty"));
+        finishCountCol.setCellValueFactory(new PropertyValueFactory<Course, Integer>("numStudentsWithFullProgress"));
 
-        table.getColumns().addAll(nameCol, subjectCol, introductionCol, difficultyCol);
+        table.getColumns().addAll(nameCol, subjectCol, introductionCol, difficultyCol, finishCountCol);
     }
 
     public Scene Courses() {
@@ -61,7 +64,8 @@ public class CourseController extends Application {
         Scene Courses = new Scene(layout, 500, 500);
 
         try {
-            ResultSet resultSet = dbConnection.executeSQLSelectStatement("SELECT * FROM Course");
+            ResultSet resultSet = dbConnection.executeSQLSelectStatement(
+                    "SELECT Course.CourseName, Course.Subject, Course.IntroductionText, Course.Difficulty, COALESCE(NumStudentsWithFullProgress, 0) AS NumStudentsWithFullProgress FROM Course LEFT JOIN (SELECT ContentItem.CourseName, COUNT(DISTINCT StudentContentItemProgress.StudentEmail) AS NumStudentsWithFullProgress FROM ContentItem JOIN StudentContentItemProgress ON ContentItem.ContentItemID = StudentContentItemProgress.ContentItemID WHERE StudentContentItemProgress.Progress = 100 GROUP BY ContentItem.CourseName) AS ProgressSummary ON Course.CourseName = ProgressSummary.CourseName;");
 
             while (resultSet.next()) {
 
@@ -69,8 +73,9 @@ public class CourseController extends Application {
                 String subject = resultSet.getString("Subject");
                 String introduction = resultSet.getString("IntroductionText");
                 int difficulty = resultSet.getInt("Difficulty");
+                int numStudentsWithFullProgress = resultSet.getInt("NumStudentsWithFullProgress");
 
-                Course temp = new Course(subject, name, introduction, difficulty);
+                Course temp = new Course(subject, name, introduction, difficulty, numStudentsWithFullProgress);
                 table.getItems().add(temp);
             }
 
