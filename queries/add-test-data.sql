@@ -32,9 +32,6 @@ INSERT INTO Enrollment (StudentEmail, CourseName, EnrollmentDate)
 VALUES ('j.arbuckle@student.avans.nl', 'Programmeren 1', convert(date, '14/04/2023', 103))
 
 INSERT INTO Enrollment (StudentEmail, CourseName, EnrollmentDate)
-VALUES ('j.arbuckle@student.avans.nl', 'Programmeren 1', convert(date, '14/04/2023', 103))
-
-INSERT INTO Enrollment (StudentEmail, CourseName, EnrollmentDate)
 VALUES ('g.arbuckle@student.avans.nl', 'Programmeren 1', convert(date, '14/04/2023', 103))
 
 INSERT INTO Enrollment (StudentEmail, CourseName, EnrollmentDate)
@@ -43,5 +40,5 @@ VALUES ('o.arbuckle@student.avans.nl', 'TestCourse', convert(date, '14/04/2023',
 INSERT INTO RecommendedCourse (CourseName)
 VALUES ('TestCourse')
 
-INSERT INTO CoursesRecommendedToCourse (MainCourse, CourseBeingRecommendedToCourse)
+INSERT INTO CoursesRecommendedToCourse (MainCourse, CourseBeingRecommended)
 VALUES ('Programmeren 1', 'TestCourse')
