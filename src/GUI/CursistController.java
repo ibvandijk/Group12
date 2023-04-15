@@ -23,12 +23,15 @@ import javafx.scene.layout.HBox;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import java.util.Calendar;
 
-
+import javafx.scene.Node;
 
 
 public class CursistController extends Application {
@@ -92,6 +95,10 @@ public class CursistController extends Application {
             layout.setTop(buttons);
 
             add.setOnAction((EventHandler) -> {
+                Node node = (Node) EventHandler.getSource();
+                Stage thisStage = (Stage) node.getScene().getWindow();
+                thisStage.close();
+
                 Stage stage = new Stage();
                 stage.setScene(addCursist());
                 stage.show();
@@ -132,6 +139,7 @@ public class CursistController extends Application {
         Label birthDay = new Label("geboortedatum Student: ");
         grid.add(birthDay, 0, 3);
         TextField birthDayTextField = new TextField();
+        birthDayTextField.setPromptText("day-month-year");
         grid.add(birthDayTextField, 1, 3);
 
         // sex input form
@@ -152,8 +160,41 @@ public class CursistController extends Application {
         TextField countryTextField = new TextField();
         grid.add(countryTextField, 1, 6);
 
+        Button submit = new Button("Voeg toe");
+        grid.getChildren().add(submit);
+
         
+
         
+        submit.setOnAction((EventHandler) -> {
+            // String retreivedBirthDay = birthDayTextField.getText();
+            // SimpleDateFormat sdf = new SimpleDateFormat(
+            // "MM-dd-yyyy");
+            // int year = Integer.parseInt(retreivedBirthDay.substring(7, 9));
+            // int month = Integer.parseInt(retreivedBirthDay.substring(3, 5));
+            // int day = Integer.parseInt(retreivedBirthDay.substring(0, 2));
+            // Calendar cal = Calendar.getInstance();
+            // cal.set(Calendar.YEAR, year);
+            // cal.set(Calendar.MONTH, month - 1); // <-- months start at 0
+            // cal.set(Calendar.DAY_OF_MONTH, day);
+
+            // java.sql.Date date = new java.sql.Date(cal.getTimeInMillis());
+            // System.out.println(sdf.format(date));
+
+
+            System.out.println(birthDayTextField.getText());
+
+            dbConnection.executeSQLUpdateStatement(String.format("INSERT INTO Student (Email, Name, Birthday, Sex, Adress, Country) VALUES ( '%1$s' , '%2$s' , '%3$s' , '%4$s' , '%5$s' , '%6$s' )",
+            emailTextField.getText(), nameTextField.getText(), birthDayTextField.getText(), SexTextField.getText(), adressTextField.getText(), countryTextField.getText()));
+
+            Node node = (Node) EventHandler.getSource();
+            Stage thisStage = (Stage) node.getScene().getWindow();
+            thisStage.close();
+            
+            Stage stage = new Stage();
+            stage.setScene(Cursists());
+            stage.show();
+        });
 
         return new Scene(grid);
     }
