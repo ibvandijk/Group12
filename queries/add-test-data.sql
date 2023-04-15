@@ -8,13 +8,13 @@ INSERT INTO Course (CourseName, Subject, IntroductionText, Difficulty)
 VALUES ('Onderzoeksvaardigheden', 'Onderzoek', 'You will be conducting research', 2)
 
 INSERT INTO Student (Email, Name, Birthday, Sex, Adress, Residence, Country)
-VALUES ('j.arbuckle@student.avans.nl', 'Jon Arbuckle', convert(date,'28/07/1951', 103), 'No', '711 Maple Street', '', 'United States')
+VALUES ('j.arbuckle@student.avans.nl', 'Jon Arbuckle', convert(date,'28/07/1951', 103), 'No', '711 Maple Street', 'Muncie,  2595 BG', 'United States')
 
 INSERT INTO Student (Email, Name, Birthday, Sex, Adress, Residence, Country)
-VALUES ('g.arbuckle@student.avans.nl', 'Garfield Arbuckle', convert(date,'19/07/1978', 103), 'Cat', '711 Maple Street', '', 'United States')
+VALUES ('g.arbuckle@student.avans.nl', 'Garfield Arbuckle', convert(date,'19/07/1978', 103), 'Cat', '711 Maple Street', 'Muncie,  2595 BG', 'United States')
 
 INSERT INTO Student (Email, Name, Birthday, Sex, Adress, Residence, Country)
-VALUES ('o.arbuckle@student.avans.nl', 'Odie Arbuckle', convert(date,'08/08/1978', 103), 'Dog', '711 Maple Street', '', 'United States')
+VALUES ('o.arbuckle@student.avans.nl', 'Odie Arbuckle', convert(date,'08/08/1978', 103), 'Dog', '711 Maple Street', 'Muncie,  2595 BG', 'United States')
 
 INSERT INTO ContentItem (CourseName, PublicationDate, Status, ContentItemID)
 VALUES ('TestCourse', convert(date, '14/04/2023', 103), 'InProgress', 1)
