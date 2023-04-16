@@ -26,6 +26,8 @@ public class DatabaseConnection {
         statement = null;
     }
 
+    // Opens a connection to the database, so SQL statements can be performed on the
+    // database
     public boolean openConnection() {
         boolean result = false;
 
@@ -56,6 +58,7 @@ public class DatabaseConnection {
         return result;
     }
 
+    // Checks whether the connection is open
     public boolean connectionIsOpen() {
         boolean open = false;
 
@@ -73,6 +76,7 @@ public class DatabaseConnection {
         return open;
     }
 
+    // Closes the connection to the database
     public void closeConnection() {
         try {
             statement.close();
@@ -84,6 +88,8 @@ public class DatabaseConnection {
         }
     }
 
+    // Executes specifically a select query and returns data from the database as a
+    // ResultSet
     public ResultSet executeSQLSelectStatement(String query) {
         ResultSet resultset = null;
 
@@ -103,11 +109,8 @@ public class DatabaseConnection {
         return resultset;
     }
 
-    /**
-     * First, check whether a some query was passed and the connection with the
-     * database.
-     * 
-     **/
+    // Executes a specific query on the database, this can be used to create, modify
+    // or delete data from the database
     public boolean executeSQLUpdateStatement(String query) {
         boolean result = false;
 

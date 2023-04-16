@@ -63,12 +63,16 @@ public class StudentModuleProgressController {
         table.getColumns().addAll(titleCol, versionCol, descriptionCol, contactNameCol, contactEmailCol, progressCol);
     }
 
+    // Creates the scene where the user can see every module with an average
+    // percentage of the progress of all students within said module
     public Scene viewModule() {
         BorderPane layout = new BorderPane();
         Scene studentModuleProgresScene = new Scene(layout, 1000, 250);
 
         try {
 
+            // The followng statement fetches the module information as well as the average
+            // percentage of all students per module
             ResultSet resultSet = dbConnection.executeSQLSelectStatement(
                     // JOIN ContentItem ON Module.ContentItemID = ContentItem.ContentItemID JOIN
                     // Course ON ContentItem.CourseName = Course.CourseName;

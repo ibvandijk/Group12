@@ -15,7 +15,6 @@ import javafx.scene.layout.BorderPane;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 public class CourseController extends Application {
     private DatabaseConnection dbConnection = new DatabaseConnection();
 
@@ -43,6 +42,8 @@ public class CourseController extends Application {
         table.getColumns().addAll(nameCol, subjectCol, introductionCol, difficultyCol, finishCountCol);
     }
 
+    // Creates a scene where the user has an overview of all courses with the amount
+    // of students who have 100% progress in every module of the course
     public Scene Courses() {
         BorderPane layout = new BorderPane();
         Scene Courses = new Scene(layout, 500, 500);
