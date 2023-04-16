@@ -34,6 +34,8 @@ import org.junit.runner.Description;
 
 import javafx.scene.Node;
 
+import test.TestAddCursist;
+
 public class CursistController extends Application {
     private DatabaseConnection dbConnection = new DatabaseConnection();
 
@@ -116,10 +118,10 @@ public class CursistController extends Application {
                     Node node = (Node) EventHandler.getSource();
                     Stage thisStage = (Stage) node.getScene().getWindow();
                     thisStage.close();
-    
+
                     Stage stage = new Stage();
                     stage.setScene(editCursist(table.getSelectionModel().getSelectedItem()));
-                    stage.show(); 
+                    stage.show();
                 }
             });
 
@@ -209,7 +211,7 @@ public class CursistController extends Application {
         grid.add(submit, 1, 7);
 
         submit.setOnAction((EventHandler) -> {
-            System.out.println(birthDayTextField.getText());
+            validateDate(birthDayTextField.getText());
 
             dbConnection.executeSQLUpdateStatement(String.format(
                     "INSERT INTO Student (Email, Name, Birthday, Sex, Adress, Country) VALUES ( '%1$s' , '%2$s' , '%3$s' , '%4$s' , '%5$s' , '%6$s' )",
@@ -282,7 +284,6 @@ public class CursistController extends Application {
         grid.getChildren().add(submit);
 
         submit.setOnAction((EventHandler) -> {
-            System.out.println(birthDayTextField.getText());
 
             dbConnection.executeSQLUpdateStatement(String.format(
                     "UPDATE Student SET Name = '%1$s', Birthday = '%2$s', Sex = '%3$s', Adress = '%4$s', Country = '%5$s' WHERE Email = '%6$s'",
@@ -416,8 +417,9 @@ public class CursistController extends Application {
 
         // lookup webcasts
         try {
-            ResultSet resultSet = dbConnection.executeSQLSelectStatement(String.format("SELECT Title, CAST(Webcast.Description AS NVARCHAR(MAX)) AS Description FROM Webcast WHERE ContentItemID IN (SELECT ContentItemID FROM ContentItem WHERE CourseName = '%1$s') UNION SELECT Title, CAST(Module.Description AS NVARCHAR(MAX)) AS Description FROM Module WHERE ContentItemID IN (SELECT ContentItemID FROM ContentItem WHERE CourseName = '%1$s') ORDER BY Title",
-                course.getCourseName()));
+            ResultSet resultSet = dbConnection.executeSQLSelectStatement(String.format(
+                    "SELECT Title, CAST(Webcast.Description AS NVARCHAR(MAX)) AS Description FROM Webcast WHERE ContentItemID IN (SELECT ContentItemID FROM ContentItem WHERE CourseName = '%1$s') UNION SELECT Title, CAST(Module.Description AS NVARCHAR(MAX)) AS Description FROM Module WHERE ContentItemID IN (SELECT ContentItemID FROM ContentItem WHERE CourseName = '%1$s') ORDER BY Title",
+                    course.getCourseName()));
             while (resultSet.next()) {
 
                 String title = resultSet.getString("Title");
@@ -436,6 +438,51 @@ public class CursistController extends Application {
         layout.setCenter(webcastTable);
         layout.autosize();
         return new Scene(layout);
+    }
+
+    public boolean validateName(String name) {
+        return name.matches("[a-zA-Z]+");
+    }
+
+    public boolean validateEmail(String email) {
+        return email.matches("[a-zA-Z]+@[a-zA-Z]+\\.[a-zA-Z]+");
+    }
+
+    public boolean validateDate(String date) {
+
+        int day = Integer.valueOf(date.substring(0, 2));
+        int month = Integer.valueOf(date.substring(3, 5));
+        int year = Integer.valueOf(date.substring(6, 10));
+
+        if (month < 1 || month > 12) {
+            return false;
+        }
+        if (day < 1 || day > 31) {
+            return false;
+        }
+        if ((month == 4 || month == 6 || month == 9 || month == 11) && day == 31) {
+            return false;
+        }
+        if (month == 2) {
+            if (day == 29 && (year % 4 != 0 || (year % 100 == 0 && year % 400 != 0))) {
+                return false;
+            }
+            if (day > 29) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validatePercentage(float percentage) {
+        if (percentage >= 0 && percentage <= 100) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean validatePostalCode(String postalcode) {
+        return postalcode.matches("[1-9][0-9]{3}\\s[A-Z]{2}");
     }
 
 }

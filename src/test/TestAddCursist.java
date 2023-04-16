@@ -2,8 +2,11 @@ package test;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import GUI.CursistController;
 
 public class TestAddCursist {
+
+    CursistController testSubject = new CursistController();
 
     /**
      * @subcontract valid name {
@@ -30,11 +33,12 @@ public class TestAddCursist {
     /**
      * @subcontract valid email {
      * @requires email matches regular expression for valid email;
-     * @ensures true; }
+     * @ensures true;}
      */
     @Test
-    public void testValidEmail(String email) {
-        assertTrue(email.matches("[a-zA-Z]+@[a-zA-Z]+\\.[a-zA-Z]+"));
+    public void testValidEmail() {
+        String email = "j.arbuckle@student.avans.nl";
+        assertTrue(testSubject.validateDate(email));
     }
 
     /**
@@ -45,7 +49,7 @@ public class TestAddCursist {
     @Test
     public void testInvalidEmail() {
         String email = "testexample.com";
-        assertFalse(email.matches("[a-zA-Z]+@[a-zA-Z]+\\.[a-zA-Z]+"));
+        assertFalse(testSubject.validateEmail(email));
     }
 
     /**
@@ -79,7 +83,7 @@ public class TestAddCursist {
     @Test
     public void testValidPercentage() {
         int percentage = 50;
-        assertTrue(percentage >= 0 && percentage <= 100);
+        assertTrue(testSubject.validatePercentage(percentage));
     }
 
     /**
@@ -90,7 +94,7 @@ public class TestAddCursist {
     @Test
     public void testInvalidPercentage() {
         int percentage = -10;
-        assertFalse(percentage >= 0 && percentage <= 100);
+        assertFalse(testSubject.validatePercentage(percentage));
     }
 
     /**
@@ -99,15 +103,14 @@ public class TestAddCursist {
      * @ensures true; }
      */
     @Test
-    public void testValidDate(int day, int month, int year) {
+    public void testValidDate() {
 
-        if (day == 0 && month == 0 && year == 0) {
-            day = 15;
-            month = 4;
-            year = 2023;
-        }
+        int day = 15;
+        int month = 4;
+        int year = 2023;
 
-        assertTrue(isValidDate(day, month, year));
+        String dateString = "" + day + "-" + month + "-" + year;
+        assertTrue(testSubject.validateDate(dateString));
     }
 
     /**
@@ -120,61 +123,9 @@ public class TestAddCursist {
         int day = 29;
         int month = 2;
         int year = 2023;
-        assertFalse(isValidDate(day, month, year));
-    }
 
-    /**
-     *
-     * Checks if the given day, month, and year represent a valid date.
-     * 
-     * @param day   the day of the month to check
-     * @param month the month to check (1-12)
-     * @param year  the year to check
-     * @return true if the given date is valid, false otherwise
-     * @subcontract invalid month {
-     * @requires month < 1 || month > 12;
-     * @ensures \result == false;
-     *          }
-     * @subcontract invalid day {
-     * @requires day < 1 || day > 31;
-     * @ensures \result == false;
-     *          }
-     * @subcontract invalid date in months with 30 days {
-     * @requires (month == 4 || month == 6 || month == 9 || month == 11) && day ==
-     *           31;
-     * @ensures \result == false;
-     *          }
-     * @subcontract invalid date in February {
-     * @requires month == 2;
-     * @requires day > 29 || (day == 29 && (year % 4 != 0 || (year % 100 == 0 &&
-     *           year % 400 != 0)));
-     * @ensures \result == false;
-     *          }
-     * @subcontract valid date {
-     * @requires 1 <= month <= 12;
-     * @requires 1 <= day <= 31;
-     * @ensures \result == true;
-     *          }
-     */
-    private boolean isValidDate(int day, int month, int year) {
-        if (month < 1 || month > 12) {
-            return false;
-        }
-        if (day < 1 || day > 31) {
-            return false;
-        }
-        if ((month == 4 || month == 6 || month == 9 || month == 11) && day == 31) {
-            return false;
-        }
-        if (month == 2) {
-            if (day == 29 && (year % 4 != 0 || (year % 100 == 0 && year % 400 != 0))) {
-                return false;
-            }
-            if (day > 29) {
-                return false;
-            }
-        }
-        return true;
+        String dateString = "" + day + "-" + month + "-" + year;
+        assertFalse(testSubject.validateDate(dateString));
     }
 
     /**
@@ -214,7 +165,7 @@ public class TestAddCursist {
     @Test
     public void testValidPostcode() {
         String postcode = "1234 AB";
-        assertTrue(postcode.matches("[1-9][0-9]{3}\\s[A-Z]{2}"));
+        assertTrue(testSubject.validatePostalCode(postcode));
     }
 
     /**
@@ -226,6 +177,6 @@ public class TestAddCursist {
     @Test
     public void testInvalidPostcode() {
         String postcode = "0000AA";
-        assertFalse(postcode.matches("[1-9][0-9]{3}\\s[A-Z]{2}"));
+        assertFalse(testSubject.validatePostalCode(postcode));
     }
 }
