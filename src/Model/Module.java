@@ -21,6 +21,8 @@ public class Module extends ContentItem{
         this.progress = progress;
     }
 
+    public Module(){}
+
     public String getTitle() {
         return this.title;
     }

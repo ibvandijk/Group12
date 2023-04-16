@@ -15,6 +15,8 @@ float progress;
         this.progress = progress;
     }
 
+    public WebCast(){}
+
     public String getTitle() {
         return this.title;
     }
