@@ -269,7 +269,7 @@ public class CursistController extends Application {
                 String introduction = resultSet.getString("IntroductionText");
                 int difficulty = resultSet.getInt("Difficulty");
 
-                Course temp = new Course(subject, name, introduction, difficulty, 0);
+                Course temp = new Course(name, subject, introduction, difficulty, 0);
                 courseTable.getItems().add(temp);
             }
         } catch (SQLException e) {
@@ -283,7 +283,6 @@ public class CursistController extends Application {
 
 
     private TableView<WebCast> webcastTable = new TableView<WebCast>();
-    private TableColumn<WebCast, String> webcastIDCol = new TableColumn<>("ID");
     private TableColumn<WebCast, String> webcastTitleCol = new TableColumn<>("Title");
     private TableColumn<WebCast, String> webcastDescriptionCol = new TableColumn<>("Description");
     private TableColumn<WebCast, String> webcastProgressCol = new TableColumn<>("Progress");
@@ -293,25 +292,22 @@ public class CursistController extends Application {
         BorderPane layout = new BorderPane();
 
         webcastTable = new TableView<WebCast>();
-        webcastIDCol.setCellValueFactory(new PropertyValueFactory<WebCast, String>("ID"));
         webcastTitleCol.setCellValueFactory(new PropertyValueFactory<WebCast, String>("Title"));
         webcastDescriptionCol.setCellValueFactory(new PropertyValueFactory<WebCast, String>("Description"));
         webcastProgressCol.setCellValueFactory(new PropertyValueFactory<WebCast, String>("Progress"));
 
-        webcastTable.getColumns().addAll(webcastIDCol, webcastTitleCol, webcastDescriptionCol, webcastProgressCol);
+        webcastTable.getColumns().addAll(webcastTitleCol, webcastDescriptionCol, webcastProgressCol);
 
         // lookup webcasts
         try {
-            ResultSet resultSet = dbConnection.executeSQLSelectStatement(String.format("SELECT * FROM Webcast WHERE ContentItemID IN (SELECT ContentItemID FROM ContentItem WHERE CourseName = '%s');",
+            ResultSet resultSet = dbConnection.executeSQLSelectStatement(String.format("SELECT Title, CAST(Webcast.Description AS NVARCHAR(MAX)) AS Description FROM Webcast WHERE ContentItemID IN (SELECT ContentItemID FROM ContentItem WHERE CourseName = '%1$s') UNION SELECT Title, CAST(Module.Description AS NVARCHAR(MAX)) AS Description FROM Module WHERE ContentItemID IN (SELECT ContentItemID FROM ContentItem WHERE CourseName = '%1$s') ORDER BY Title",
                 course.getCourseName()));
             while (resultSet.next()) {
 
-                String ID = resultSet.getString("ID");
                 String title = resultSet.getString("Title");
                 String description = resultSet.getString("Description");
 
                 WebCast temp = new WebCast();
-                temp.setID(Integer.valueOf(ID));
                 temp.setTitle(title);
                 temp.setDescription(description);
                 webcastTable.getItems().add(temp);
@@ -320,6 +316,7 @@ public class CursistController extends Application {
             e.printStackTrace();
         }
 
+        layout.autosize();
         layout.setCenter(webcastTable);
         layout.autosize();
         return new Scene(layout);
