@@ -1,0 +1,58 @@
+Student
+Binnen Student (oftewel Cursist) staat de volgende data
+email - een email om contact met de student op te nemen
+name - volledige naam van de student
+birthday - geboortedatum van de student
+sex - de sekse of geslacht van de student
+adress - adres van de student met straat naam en nummer
+residence - stad en postcode van de student
+country - land van het student
+
+gebruikt voor alle variabelen getters en setters
+alle variabelen worden gebruikt in de constructor
+
+Course
+courseName - naam van de de cursus
+subject - onderwerp van de cursus
+introductionText - een introductie over de cursus
+difficutly - een moeilijkheidsgraad gegeven in een nummer
+
+gebruikt voor alle variabelen getters en setters
+alle variabelen worden gebruikt in de constructor
+Heeft een methode addModule waarbij een Module of een Webcast aan een
+course kan worden toegevoegd, dit is om er later makkelijker bij te kunnen
+
+Module
+title - naam van de module
+version - versie nummer van de module
+description - een beschrijving van de module
+contactName - naam van de contact persoon
+contactEmail - email van de contact persoon
+course - de cursus waarin de module zich bevind
+progress - gemiddelde progress van alle studenten van de module
+
+Webcast
+title - naam van de webcast
+description - beschrijving van de webcast
+speaker - naam van de persoon die de webcast heeft opgenomen
+organisation - de organisatie die de webcast heeft opgenomen
+progress - gemiddelde progress van alle studenten van de webcast
+
+ContentItem
+id - identity number van object
+publicationDate - datum van wanneer dit stukje content is geupload
+status - wat de status is van dit stukje content
+
+Beide Webcast en Module zijn content van een Course dus is ContentItem abstract
+en de supertype van webcast en module
+
+Enrollment
+course - de cursus waar de student zich inschrijft
+student - de student die zich inschrijft in een cursus
+
+Dit is om makkelijk om bij te houden zonder dat course een enorm object wordt met te
+veel data
+
+
+
+
