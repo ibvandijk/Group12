@@ -13,6 +13,9 @@ INSERT INTO Student (Email, Name, Birthday, Sex, Adress, Country) VALUES ( '%1$s
 Verwijderd een cursist (student)
 DELETE FROM Student WHERE Email = '%1$s' AND Name = '%2$s' AND Birthday = '%3$s' AND Sex = '%4$s' AND Adress = '%5$s' AND Country = '%6$s';
 
+Past een cursist (student) aan
+UPDATE Student SET Name = '%1$s', Birthday = '%2$s', Sex = '%3$s', Adress = '%4$s', Country = '%5$s' WHERE Email = '%6$s'
+
 Selecteert alle Course via enrollment gebaseerd op een email adres van een student
 SELECT * FROM Course WHERE CourseName IN (SELECT CourseName FROM Enrollment WHERE StudentEmail = '%s');
 
