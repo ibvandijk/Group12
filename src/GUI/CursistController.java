@@ -51,6 +51,10 @@ public class CursistController extends Application {
     // Create column Sex
     private TableColumn<Cursist, String> sexCol = new TableColumn<>("sex");
 
+    private TableColumn<Cursist, String> adressCol = new TableColumn<>("adress");
+
+    private TableColumn<Cursist, String> countryCol = new TableColumn<>("country");
+
     public CursistController() {
         dbConnection.openConnection();
     }
@@ -64,11 +68,14 @@ public class CursistController extends Application {
         nameCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("name"));
         birthDateCol.setCellValueFactory(new PropertyValueFactory<Cursist, Date>("birthDay"));
         sexCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("sex"));
+        adressCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("adress"));
+        countryCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("country"));
 
-        table.getColumns().addAll(emailCol, nameCol, birthDateCol, sexCol);
+        table.getColumns().addAll(emailCol, nameCol, birthDateCol, sexCol, adressCol, countryCol);
 
         try {
-            ResultSet resultSet = dbConnection.executeSQLSelectStatement("SELECT * FROM Student");
+            ResultSet resultSet = dbConnection.executeSQLSelectStatement(
+                    "SELECT Student.Email, Student.Name, Student.Birthday, Student.Sex, concat(Student.Adress, ' ', Student.Residence) AS Adress, Student.Country FROM Student");
             while (resultSet.next()) {
 
                 String email = resultSet.getString("Email");
@@ -281,14 +288,13 @@ public class CursistController extends Application {
         return new Scene(layout);
     }
 
-
     private TableView<WebCast> webcastTable = new TableView<WebCast>();
     private TableColumn<WebCast, String> webcastTitleCol = new TableColumn<>("Title");
     private TableColumn<WebCast, String> webcastDescriptionCol = new TableColumn<>("Description");
     private TableColumn<WebCast, String> webcastProgressCol = new TableColumn<>("Progress");
 
     public Scene viewWebcast(Cursist cursist, Course course) {
-        
+
         BorderPane layout = new BorderPane();
 
         webcastTable = new TableView<WebCast>();

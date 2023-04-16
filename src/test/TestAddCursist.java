@@ -6,13 +6,34 @@ import static org.junit.Assert.*;
 public class TestAddCursist {
 
     /**
+     * @subcontract valid name {
+     * @requires name matches regular expression for valid name;
+     * @ensures true; }
+     * @param name
+     */
+    @Test
+    public void testValidName(String name) {
+        assertTrue(name.matches("[a-zA-Z]+"));
+    }
+
+    /**
+     * @subcontract invalid name {
+     * @requires name matches regular expression for invalid name;
+     * @ensures true; }
+     * @param name
+     */
+    @Test
+    public void testInValidName(String name) {
+        assertTrue(name.matches("[0-9]+"));
+    }
+
+    /**
      * @subcontract valid email {
      * @requires email matches regular expression for valid email;
      * @ensures true; }
      */
     @Test
-    public void testValidEmail() {
-        String email = "test@example.com";
+    public void testValidEmail(String email) {
         assertTrue(email.matches("[a-zA-Z]+@[a-zA-Z]+\\.[a-zA-Z]+"));
     }
 
@@ -78,10 +99,14 @@ public class TestAddCursist {
      * @ensures true; }
      */
     @Test
-    public void testValidDate() {
-        int day = 15;
-        int month = 4;
-        int year = 2023;
+    public void testValidDate(int day, int month, int year) {
+
+        if (day == 0 && month == 0 && year == 0) {
+            day = 15;
+            month = 4;
+            year = 2023;
+        }
+
         assertTrue(isValidDate(day, month, year));
     }
 
