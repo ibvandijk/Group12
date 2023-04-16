@@ -7,30 +7,14 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.TextField;
-
-import javafx.scene.text.Text;
-
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import java.text.SimpleDateFormat;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
-import java.util.Calendar;
-
-import javafx.scene.Node;
 
 public class CourseController extends Application {
     private DatabaseConnection dbConnection = new DatabaseConnection();
@@ -80,22 +64,6 @@ public class CourseController extends Application {
             }
 
             layout.setCenter(table);
-
-            Button add = new Button("Add");
-            Button delete = new Button("Delete");
-            Button Back = new Button("Back");
-            Button view = new Button("View");
-            HBox buttons = new HBox();
-            buttons.getChildren().addAll(Back, add, view, delete);
-            layout.setTop(buttons);
-
-            add.setOnAction((EventHandler) -> {
-                Stage stage = new Stage();
-                stage.setScene(addCourse());
-                stage.show();
-
-            });
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -105,58 +73,6 @@ public class CourseController extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-    }
-
-    public Scene addCourse() {
-        GridPane grid = new GridPane();
-
-        Text scenetitle = new Text("Nieuwe Cursus toevoegen:");
-        grid.add(scenetitle, 0, 0, 2, 1);
-
-        // email input form
-        Label name = new Label("Naam Cursus:");
-        grid.add(name, 0, 1);
-        TextField nameTextField = new TextField();
-        grid.add(nameTextField, 1, 1);
-
-        // naam input form
-        Label subject = new Label("Onderwerp Course:");
-        grid.add(subject, 0, 2);
-        TextField subjectTextField = new TextField();
-        grid.add(subjectTextField, 1, 2);
-
-        // sex input form
-        Label introduction = new Label("Introductie: ");
-        grid.add(introduction, 0, 4);
-        TextField IntroductionTextField = new TextField();
-        grid.add(IntroductionTextField, 1, 4);
-
-        // adress input form
-        Label difficulty = new Label("Moeilijkheid met nummer: ");
-        grid.add(difficulty, 0, 5);
-        TextField difficultyTextField = new TextField();
-        grid.add(difficultyTextField, 1, 5);
-
-        Button submit = new Button("Voeg toe");
-        grid.getChildren().add(submit);
-
-        submit.setOnAction((EventHandler) -> {
-
-            dbConnection.executeSQLUpdateStatement(String.format(
-                    "INSERT INTO Course (CourseName, Subject, IntroductionText, Difficulty) VALUES ( '%1$s' , '%2$s' , '%3$s' , '%4$s')",
-                    nameTextField.getText(), subjectTextField.getText(), IntroductionTextField.getText(),
-                    difficultyTextField.getText()));
-
-            Node node = (Node) EventHandler.getSource();
-            Stage thisStage = (Stage) node.getScene().getWindow();
-            thisStage.close();
-
-            Stage stage = new Stage();
-            stage.setScene(Courses());
-            stage.show();
-        });
-
-        return new Scene(grid);
     }
 
 }
