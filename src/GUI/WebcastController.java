@@ -60,6 +60,7 @@ public class WebcastController {
         table.getColumns().addAll(titleCol, descriptionCol, speakerCol, organisationCol, viewCountCol);
     }
 
+    // Creates the scene where the user can see the top 3 webcasts
     public Scene viewWebcast() {
         BorderPane layout = new BorderPane();
         Scene webcastScene = new Scene(layout, 1000, 250);
