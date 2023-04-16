@@ -26,7 +26,7 @@ public class ApplicationController extends Application {
         this.window = window;
         BorderPane layout = new BorderPane();
         VBox list = new VBox();
-        HBox buttons = new HBox();
+        VBox buttons = new VBox();
 
         // add more scenes
         Button Cursists = new Button("Cursisten zien en wijzigen");
