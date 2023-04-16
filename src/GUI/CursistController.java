@@ -92,10 +92,11 @@ public class CursistController extends Application {
             layout.setCenter(table);
 
             Button add = new Button("Add");
+            Button edit = new Button("Edit");
             Button delete = new Button("Delete");
             Button view = new Button("View");
             HBox buttons = new HBox();
-            buttons.getChildren().addAll(add, view, delete);
+            buttons.getChildren().addAll(add, edit, view, delete);
             layout.setTop(buttons);
 
             add.setOnAction((EventHandler) -> {
@@ -109,26 +110,44 @@ public class CursistController extends Application {
 
             });
 
+            edit.setOnAction((EventHandler) -> {
+
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    Node node = (Node) EventHandler.getSource();
+                    Stage thisStage = (Stage) node.getScene().getWindow();
+                    thisStage.close();
+    
+                    Stage stage = new Stage();
+                    stage.setScene(editCursist(table.getSelectionModel().getSelectedItem()));
+                    stage.show(); 
+                }
+            });
+
             delete.setOnAction((EventHandler) -> {
-                Node node = (Node) EventHandler.getSource();
-                Stage thisStage = (Stage) node.getScene().getWindow();
-                thisStage.close();
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    Node node = (Node) EventHandler.getSource();
+                    Stage thisStage = (Stage) node.getScene().getWindow();
+                    thisStage.close();
 
-                removeCursist();
+                    removeCursist();
 
-                Stage stage = new Stage();
-                stage.setScene(Cursists());
-                stage.show();
+                    Stage stage = new Stage();
+                    stage.setScene(Cursists());
+                    stage.show();
+                }
             });
 
             view.setOnAction((EventHandler) -> {
-                Node node = (Node) EventHandler.getSource();
-                Stage thisStage = (Stage) node.getScene().getWindow();
-                thisStage.close();
+                if (table.getSelectionModel().getSelectedItem() != null) {
+                    Node node = (Node) EventHandler.getSource();
+                    Stage thisStage = (Stage) node.getScene().getWindow();
+                    thisStage.close();
 
-                Stage stage = new Stage();
-                stage.setScene(viewCursist(table.getSelectionModel().getSelectedItem()));
-                stage.show();
+                    Stage stage = new Stage();
+                    stage.setScene(viewCursist(table.getSelectionModel().getSelectedItem()));
+                    stage.show();
+                }
+
             });
 
         } catch (SQLException e) {
@@ -187,7 +206,7 @@ public class CursistController extends Application {
         grid.add(countryTextField, 1, 6);
 
         Button submit = new Button("Voeg toe");
-        grid.getChildren().add(submit);
+        grid.add(submit, 1, 7);
 
         submit.setOnAction((EventHandler) -> {
             System.out.println(birthDayTextField.getText());
@@ -196,6 +215,80 @@ public class CursistController extends Application {
                     "INSERT INTO Student (Email, Name, Birthday, Sex, Adress, Country) VALUES ( '%1$s' , '%2$s' , '%3$s' , '%4$s' , '%5$s' , '%6$s' )",
                     emailTextField.getText(), nameTextField.getText(), birthDayTextField.getText(),
                     SexTextField.getText(), adressTextField.getText(), countryTextField.getText()));
+
+            Node node = (Node) EventHandler.getSource();
+            Stage thisStage = (Stage) node.getScene().getWindow();
+            thisStage.close();
+
+            Stage stage = new Stage();
+            stage.setScene(Cursists());
+            stage.show();
+        });
+
+        grid.autosize();
+        return new Scene(grid);
+    }
+
+    public Scene editCursist(Cursist cursist) {
+        GridPane grid = new GridPane();
+
+        Text scenetitle = new Text("Student aanpassen:");
+        grid.add(scenetitle, 0, 0, 2, 1);
+
+        // email input form
+        Label email = new Label("E-mail Student:");
+        grid.add(email, 0, 1);
+        TextField emailTextField = new TextField();
+        emailTextField.setText(cursist.getEmail());
+        emailTextField.setEditable(false);
+        grid.add(emailTextField, 1, 1);
+
+        // naam input form
+        Label name = new Label("Naam Student:");
+        grid.add(name, 0, 2);
+        TextField nameTextField = new TextField();
+        nameTextField.setText(cursist.getName());
+        grid.add(nameTextField, 1, 2);
+
+        // geboortedatum input form
+        Label birthDay = new Label("geboortedatum Student: ");
+        grid.add(birthDay, 0, 3);
+        TextField birthDayTextField = new TextField();
+        birthDayTextField.setText(String.valueOf(cursist.getBirthDay()));
+        grid.add(birthDayTextField, 1, 3);
+
+        // sex input form
+        Label Sex = new Label("Sex Student: ");
+        grid.add(Sex, 0, 4);
+        TextField SexTextField = new TextField();
+        SexTextField.setText(cursist.getSex());
+        grid.add(SexTextField, 1, 4);
+
+        // adress input form
+        Label adress = new Label("adress Student: ");
+        grid.add(adress, 0, 5);
+        TextField adressTextField = new TextField();
+        adressTextField.setText(cursist.getAdress());
+        grid.add(adressTextField, 1, 5);
+
+        // country input form
+        Label country = new Label("country Student: ");
+        grid.add(country, 0, 6);
+        TextField countryTextField = new TextField();
+        countryTextField.setText(cursist.getCountry());
+        grid.add(countryTextField, 1, 6);
+
+        Button submit = new Button("Pas aan");
+        grid.getChildren().add(submit);
+
+        submit.setOnAction((EventHandler) -> {
+            System.out.println(birthDayTextField.getText());
+
+            dbConnection.executeSQLUpdateStatement(String.format(
+                    "UPDATE Student SET Name = '%1$s', Birthday = '%2$s', Sex = '%3$s', Adress = '%4$s', Country = '%5$s' WHERE Email = '%6$s'",
+                    nameTextField.getText(), birthDayTextField.getText(),
+                    SexTextField.getText(), adressTextField.getText(), countryTextField.getText(),
+                    cursist.getEmail()));
 
             Node node = (Node) EventHandler.getSource();
             Stage thisStage = (Stage) node.getScene().getWindow();
@@ -244,17 +337,20 @@ public class CursistController extends Application {
 
         Button viewContentitems = new Button("view");
         viewContentitems.setOnAction((EventHandler) -> {
-            Node node = (Node) EventHandler.getSource();
-            Stage thisStage = (Stage) node.getScene().getWindow();
-            thisStage.close();
+            if (courseTable.getSelectionModel().getSelectedItem() != null && cursist != null) {
+                Node node = (Node) EventHandler.getSource();
+                Stage thisStage = (Stage) node.getScene().getWindow();
+                thisStage.close();
 
-            Stage stage = new Stage();
-            stage.setScene(viewWebcast(cursist, courseTable.getSelectionModel().getSelectedItem()));
-            stage.show();
+                Stage stage = new Stage();
+                stage.setScene(viewWebcast(cursist, courseTable.getSelectionModel().getSelectedItem()));
+                stage.show();
+            }
         });
 
-        layout.setLeft(back);
-        layout.setTop(viewContentitems);
+        HBox buttons = new HBox();
+        buttons.getChildren().addAll(back, viewContentitems);
+        layout.setTop(buttons);
 
         courseTable = new TableView<Course>();
         courseNameCol.setCellValueFactory(new PropertyValueFactory<Course, String>("courseName"));
@@ -303,6 +399,20 @@ public class CursistController extends Application {
         webcastProgressCol.setCellValueFactory(new PropertyValueFactory<WebCast, String>("Progress"));
 
         webcastTable.getColumns().addAll(webcastTitleCol, webcastDescriptionCol, webcastProgressCol);
+
+        Button back = new Button("Back");
+        back.setOnAction((EventHandler) -> {
+            Node node = (Node) EventHandler.getSource();
+            Stage thisStage = (Stage) node.getScene().getWindow();
+            thisStage.close();
+
+            Stage stage = new Stage();
+            stage.setScene(viewCursist(cursist));
+            stage.show();
+        });
+        HBox buttons = new HBox();
+        buttons.getChildren().addAll(back);
+        layout.setTop(buttons);
 
         // lookup webcasts
         try {
