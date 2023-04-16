@@ -1,11 +1,12 @@
 package Model;
 
-public class WebCast extends ContentItem{
-String title;
-String description;
-String speaker;
-String organisation;
-float progress;
+public class WebCast extends ContentItem {
+    String title;
+    String description;
+    String speaker;
+    String organisation;
+    int viewCount;
+    float progress;
 
     public WebCast(String title, String description, String speaker, String organisation, float progress) {
         this.title = title;
@@ -15,7 +16,16 @@ float progress;
         this.progress = progress;
     }
 
-    public WebCast(){}
+    public WebCast(String title, String description, String speaker, String organisation, int viewCount) {
+        this.title = title;
+        this.description = description;
+        this.speaker = speaker;
+        this.organisation = organisation;
+        this.viewCount = viewCount;
+    }
+
+    public WebCast() {
+    }
 
     public String getTitle() {
         return this.title;
@@ -47,6 +57,14 @@ float progress;
 
     public void setOrganisation(String organisation) {
         this.organisation = organisation;
+    }
+
+    public int getViewCount() {
+        return this.viewCount;
+    }
+
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
     }
 
     public float getProgress() {
