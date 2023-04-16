@@ -4,7 +4,6 @@ import Model.Cursist;
 import Model.Module;
 import Model.WebCast;
 import Model.Course;
-import Model.ContentItem;
 import Datastorage.DatabaseConnection;
 
 import javafx.application.Application;
@@ -17,6 +16,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Alert;
 
 import javafx.scene.text.Text;
 
@@ -28,43 +29,43 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import javax.swing.text.AbstractDocument.Content;
-
-import org.junit.runner.Description;
 
 import javafx.scene.Node;
 
-import test.TestAddCursist;
-
+//The class CursistController created the scene where you view all Students, and have CRUD implementation.
 public class CursistController extends Application {
+
+    /*  creates the database connection that is used to import data from the database generated in /DB2/CodecademyDB.sql 
+        and filled by test data from /DB2/add-test-data.sql */
     private DatabaseConnection dbConnection = new DatabaseConnection();
 
+    // create the table for Cursists where you can view all the cursists in the Database
     private TableView<Cursist> table = new TableView<Cursist>();
 
-    // Create column UserName (Data type of String).
+    // Create column UserName (Data type of String)
     private TableColumn<Cursist, String> emailCol = new TableColumn<>("email");
-
-    // Create 2 columns for Name.
+    // Create column for Name (Data type of String)
     private TableColumn<Cursist, String> nameCol = new TableColumn<>("name");
-
     // Create column birthdate (Data type of Date)
     private TableColumn<Cursist, Date> birthDateCol = new TableColumn<>("birthDate");
-
-    // Create column Sex
+    // Create column Sex (Data type of String)
     private TableColumn<Cursist, String> sexCol = new TableColumn<>("sex");
-
+    // Create column adress (Data type of String)
     private TableColumn<Cursist, String> adressCol = new TableColumn<>("adress");
-
+    // Create column country (Data type of String)
     private TableColumn<Cursist, String> countryCol = new TableColumn<>("country");
 
+    // constructor only opens the 
     public CursistController() {
         dbConnection.openConnection();
     }
 
+    // the creation of the main Cursist screen where all cursists are displayed.
     public Scene Cursists() {
         BorderPane layout = new BorderPane();
         Scene cursists = new Scene(layout, 500, 500);
 
+        // sets the column names and positions for the tableview of cursists
         table = new TableView<Cursist>();
         emailCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("email"));
         nameCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("name"));
@@ -72,9 +73,9 @@ public class CursistController extends Application {
         sexCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("sex"));
         adressCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("adress"));
         countryCol.setCellValueFactory(new PropertyValueFactory<Cursist, String>("country"));
-
         table.getColumns().addAll(emailCol, nameCol, birthDateCol, sexCol, adressCol, countryCol);
 
+        // pull data from the database to populate the tableview of cursists
         try {
             ResultSet resultSet = dbConnection.executeSQLSelectStatement(
                     "SELECT Student.Email, Student.Name, Student.Birthday, Student.Sex, concat(Student.Adress, ' ', Student.Residence) AS Adress, Student.Country FROM Student");
@@ -90,9 +91,9 @@ public class CursistController extends Application {
                 Cursist temp = new Cursist(email, name, birthDate, sex, adress, country);
                 table.getItems().add(temp);
             }
-
             layout.setCenter(table);
 
+            // implement the buttons used for CRUD
             Button add = new Button("Add");
             Button edit = new Button("Edit");
             Button delete = new Button("Delete");
@@ -101,6 +102,7 @@ public class CursistController extends Application {
             buttons.getChildren().addAll(add, edit, view, delete);
             layout.setTop(buttons);
 
+            // removes current cursists view, and opens the addCursists screen
             add.setOnAction((EventHandler) -> {
                 Node node = (Node) EventHandler.getSource();
                 Stage thisStage = (Stage) node.getScene().getWindow();
@@ -112,6 +114,7 @@ public class CursistController extends Application {
 
             });
 
+            // removes current cursists view, and opens the editCursists screen
             edit.setOnAction((EventHandler) -> {
 
                 if (table.getSelectionModel().getSelectedItem() != null) {
@@ -125,6 +128,7 @@ public class CursistController extends Application {
                 }
             });
 
+            // deletes the currently selected cursists from the database
             delete.setOnAction((EventHandler) -> {
                 if (table.getSelectionModel().getSelectedItem() != null) {
                     Node node = (Node) EventHandler.getSource();
@@ -139,6 +143,7 @@ public class CursistController extends Application {
                 }
             });
 
+            // opens a new view of the selected cursists for all courses that the selected cursists is enrolled at
             view.setOnAction((EventHandler) -> {
                 if (table.getSelectionModel().getSelectedItem() != null) {
                     Node node = (Node) EventHandler.getSource();
@@ -149,14 +154,14 @@ public class CursistController extends Application {
                     stage.setScene(viewCursist(table.getSelectionModel().getSelectedItem()));
                     stage.show();
                 }
-
             });
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         layout.autosize();
+
+        // returns the main view with all available cursists
         return cursists;
     }
 
@@ -164,11 +169,14 @@ public class CursistController extends Application {
     public void start(Stage stage) throws Exception {
     }
 
+    //This function implements the addcursists view, where you enter all data and then can submit these to the database
     public Scene addCursist() {
         GridPane grid = new GridPane();
 
         Text scenetitle = new Text("Nieuw Student toevoegen:");
         grid.add(scenetitle, 0, 0, 2, 1);
+
+        // Generate all imput fields for the adding of a new cursist
 
         // email input form
         Label email = new Label("E-mail Student:");
@@ -180,6 +188,7 @@ public class CursistController extends Application {
         Label name = new Label("Naam Student:");
         grid.add(name, 0, 2);
         TextField nameTextField = new TextField();
+        nameTextField.setPromptText("No spaces");
         grid.add(nameTextField, 1, 2);
 
         // geboortedatum input form
@@ -199,6 +208,7 @@ public class CursistController extends Application {
         Label adress = new Label("adress Student: ");
         grid.add(adress, 0, 5);
         TextField adressTextField = new TextField();
+        adressTextField.setPromptText("Postcode '0000 XX'");
         grid.add(adressTextField, 1, 5);
 
         // country input form
@@ -210,27 +220,77 @@ public class CursistController extends Application {
         Button submit = new Button("Voeg toe");
         grid.add(submit, 1, 7);
 
+        //submit entered data and handle this in an sql query to add the data to the database
         submit.setOnAction((EventHandler) -> {
-            validateDate(birthDayTextField.getText());
 
-            dbConnection.executeSQLUpdateStatement(String.format(
+            Alert a = new Alert(AlertType.NONE);
+
+            //validate the input data
+
+            if (!validateEmail(emailTextField.getText())) {
+                // set alert type
+                a.setAlertType(AlertType.WARNING);
+ 
+                // set content text
+                a.setContentText("Email is invalid");
+
+                // show the dialog
+                a.show();
+            } 
+            else if (!validateName(nameTextField.getText())) {
+                // set alert type
+                a.setAlertType(AlertType.WARNING);
+ 
+                // set content text
+                a.setContentText("name is invalid");
+
+                // show the dialog
+                a.show();
+            }
+            else if (!validateDate(birthDayTextField.getText())) {
+                // set alert type
+                a.setAlertType(AlertType.WARNING);
+ 
+                // set content text
+                a.setContentText("birthday is invalid");
+
+                // show the dialog
+                a.show();
+            }
+            else if (!validatePostalCode(adressTextField.getText())) {
+                // set alert type
+                a.setAlertType(AlertType.WARNING);
+ 
+                // set content text
+                a.setContentText("adress is invalid");
+
+                // show the dialog
+                a.show();
+            }
+            else{
+                // add input data to new cursist within database
+                dbConnection.executeSQLUpdateStatement(String.format(
                     "INSERT INTO Student (Email, Name, Birthday, Sex, Adress, Country) VALUES ( '%1$s' , '%2$s' , '%3$s' , '%4$s' , '%5$s' , '%6$s' )",
                     emailTextField.getText(), nameTextField.getText(), birthDayTextField.getText(),
                     SexTextField.getText(), adressTextField.getText(), countryTextField.getText()));
 
-            Node node = (Node) EventHandler.getSource();
-            Stage thisStage = (Stage) node.getScene().getWindow();
-            thisStage.close();
+                // close current screen
+                Node node = (Node) EventHandler.getSource();
+                Stage thisStage = (Stage) node.getScene().getWindow();
+                thisStage.close();
 
-            Stage stage = new Stage();
-            stage.setScene(Cursists());
-            stage.show();
+                //open the main Cursist overview
+                Stage stage = new Stage();
+                stage.setScene(Cursists());
+                stage.show();
+            }
         });
 
         grid.autosize();
-        return new Scene(grid);
+        return new Scene(grid, 500, 500);
     }
 
+    // opens up the edit screen for chosen cursist, this will auto input existing data and will have the email be un-editable
     public Scene editCursist(Cursist cursist) {
         GridPane grid = new GridPane();
 
@@ -301,9 +361,10 @@ public class CursistController extends Application {
         });
 
         grid.autosize();
-        return new Scene(grid);
+        return new Scene(grid, 500, 500);
     }
 
+    // this will remove selected cursist within the databse.
     public void removeCursist() {
         Cursist toRemove;
         toRemove = table.getSelectionModel().getSelectedItem();
@@ -316,12 +377,14 @@ public class CursistController extends Application {
         Cursists();
     }
 
+    // created the course table to create a view where you can see all courses selected student is enrolled into
     private TableView<Course> courseTable = new TableView<Course>();
     private TableColumn<Course, String> courseNameCol = new TableColumn<>("courseName");
     private TableColumn<Course, String> courseSubjectCol = new TableColumn<>("subject");
     private TableColumn<Course, String> courseIntroductionCol = new TableColumn<>("introductionText");
     private TableColumn<Course, Integer> courseDifficultyCol = new TableColumn<>("difficulty");
 
+    // will open a view where you can see the enrolled courses of selected student
     public Scene viewCursist(Cursist cursist) {
         BorderPane layout = new BorderPane();
 
@@ -382,7 +445,7 @@ public class CursistController extends Application {
 
         layout.setCenter(courseTable);
         layout.autosize();
-        return new Scene(layout);
+        return new Scene(layout, 500, 500);
     }
 
     private TableView<WebCast> webcastTable = new TableView<WebCast>();
@@ -390,6 +453,7 @@ public class CursistController extends Application {
     private TableColumn<WebCast, String> webcastDescriptionCol = new TableColumn<>("Description");
     private TableColumn<WebCast, String> webcastProgressCol = new TableColumn<>("Progress");
 
+    // will open a view where you can see the modules of selected course with its progress.
     public Scene viewWebcast(Cursist cursist, Course course) {
 
         BorderPane layout = new BorderPane();
@@ -434,10 +498,8 @@ public class CursistController extends Application {
             e.printStackTrace();
         }
 
-        layout.autosize();
         layout.setCenter(webcastTable);
-        layout.autosize();
-        return new Scene(layout);
+        return new Scene(layout, 500, 500);
     }
 
     public boolean validateName(String name) {
