@@ -1,0 +1,26 @@
+Gebruikt om alle Courses te vinden met daarachter hoeveel cursisten deze course hebben behaald
+SELECT Course.CourseName, Course.Subject, Course.IntroductionText, Course.Difficulty, COALESCE(NumStudentsWithFullProgress, 0) AS NumStudentsWithFullProgress FROM Course LEFT JOIN (SELECT ContentItem.CourseName, COUNT(DISTINCT StudentContentItemProgress.StudentEmail) AS NumStudentsWithFullProgress FROM ContentItem JOIN StudentContentItemProgress ON ContentItem.ContentItemID = StudentContentItemProgress.ContentItemID WHERE StudentContentItemProgress.Progress = 100 GROUP BY ContentItem.CourseName) AS ProgressSummary ON Course.CourseName = ProgressSummary.CourseName;
+
+Maakt een nieuwe Cursus aan
+INSERT INTO Course (CourseName, Subject, IntroductionText, Difficulty) VALUES ( '%1$s' , '%2$s' , '%3$s' , '%4$s')
+
+Laat alle Cursisten (students) zien
+SELECT Student.Email, Student.Name, Student.Birthday, Student.Sex, concat(Student.Adress, ' ', Student.Residence) AS Adress, Student.Country FROM Student
+
+Maakt een nieuwe cursist (student) aan
+INSERT INTO Student (Email, Name, Birthday, Sex, Adress, Country) VALUES ( '%1$s' , '%2$s' , '%3$s' , '%4$s' , '%5$s' , '%6$s' )
+
+Verwijderd een cursist (student)
+DELETE FROM Student WHERE Email = '%1$s' AND Name = '%2$s' AND Birthday = '%3$s' AND Sex = '%4$s' AND Adress = '%5$s' AND Country = '%6$s';
+
+Selecteert alle Course via enrollment gebaseerd op een email adres van een student
+SELECT * FROM Course WHERE CourseName IN (SELECT CourseName FROM Enrollment WHERE StudentEmail = '%s');
+
+Zoekt alle webcasts
+"SELECT Title, CAST(Webcast.Description AS NVARCHAR(MAX)) AS Description FROM Webcast WHERE ContentItemID IN (SELECT ContentItemID FROM ContentItem WHERE CourseName = '%1$s') UNION SELECT Title, CAST(Module.Description AS NVARCHAR(MAX)) AS Description FROM Module WHERE ContentItemID IN (SELECT ContentItemID FROM ContentItem WHERE CourseName = '%1$s') ORDER BY Title"
+
+Laat het gemiddelde percentage zien van de progress van alle studenten binnen een module en laat alle modules zien
+SELECT Module.*, Progress FROM Module JOIN (SELECT ContentItemID, AVG(Progress) AS Progress FROM StudentContentItemProgress GROUP BY ContentItemID ) AS ProgressSummary ON Module.ContentItemID = ProgressSummary.ContentItemID
+
+Selecteert de top 3 webcasts en laat de meest bekeken bovenaan staan
+SELECT TOP 3 Webcast.*  FROM Webcast ORDER BY viewCount DESC;
