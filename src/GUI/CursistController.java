@@ -1,7 +1,10 @@
 package GUI;
 
 import Model.Cursist;
+import Model.Module;
+import Model.WebCast;
 import Model.Course;
+import Model.ContentItem;
 import Datastorage.DatabaseConnection;
 
 import javafx.application.Application;
@@ -24,12 +27,10 @@ import javafx.scene.layout.HBox;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import java.text.SimpleDateFormat;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
-import java.util.Calendar;
+import javax.swing.text.AbstractDocument.Content;
+
+import org.junit.runner.Description;
 
 import javafx.scene.Node;
 
@@ -234,7 +235,19 @@ public class CursistController extends Application {
             stage.show();
         });
 
-        layout.setTop(back);
+        Button viewContentitems = new Button("view");
+        viewContentitems.setOnAction((EventHandler) -> {
+            Node node = (Node) EventHandler.getSource();
+            Stage thisStage = (Stage) node.getScene().getWindow();
+            thisStage.close();
+
+            Stage stage = new Stage();
+            stage.setScene(viewWebcast(cursist, courseTable.getSelectionModel().getSelectedItem()));
+            stage.show();
+        });
+
+        layout.setLeft(back);
+        layout.setTop(viewContentitems);
 
         courseTable = new TableView<Course>();
         courseNameCol.setCellValueFactory(new PropertyValueFactory<Course, String>("courseName"));
@@ -259,12 +272,55 @@ public class CursistController extends Application {
                 Course temp = new Course(subject, name, introduction, difficulty, 0);
                 courseTable.getItems().add(temp);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         layout.setCenter(courseTable);
+        layout.autosize();
+        return new Scene(layout);
+    }
+
+
+    private TableView<WebCast> webcastTable = new TableView<WebCast>();
+    private TableColumn<WebCast, String> webcastIDCol = new TableColumn<>("ID");
+    private TableColumn<WebCast, String> webcastTitleCol = new TableColumn<>("Title");
+    private TableColumn<WebCast, String> webcastDescriptionCol = new TableColumn<>("Description");
+    private TableColumn<WebCast, String> webcastProgressCol = new TableColumn<>("Progress");
+
+    public Scene viewWebcast(Cursist cursist, Course course) {
+        
+        BorderPane layout = new BorderPane();
+
+        webcastTable = new TableView<WebCast>();
+        webcastIDCol.setCellValueFactory(new PropertyValueFactory<WebCast, String>("ID"));
+        webcastTitleCol.setCellValueFactory(new PropertyValueFactory<WebCast, String>("Title"));
+        webcastDescriptionCol.setCellValueFactory(new PropertyValueFactory<WebCast, String>("Description"));
+        webcastProgressCol.setCellValueFactory(new PropertyValueFactory<WebCast, String>("Progress"));
+
+        webcastTable.getColumns().addAll(webcastIDCol, webcastTitleCol, webcastDescriptionCol, webcastProgressCol);
+
+        // lookup webcasts
+        try {
+            ResultSet resultSet = dbConnection.executeSQLSelectStatement(String.format("SELECT * FROM Webcast WHERE ContentItemID IN (SELECT ContentItemID FROM ContentItem WHERE CourseName = '%s');",
+                course.getCourseName()));
+            while (resultSet.next()) {
+
+                String ID = resultSet.getString("ID");
+                String title = resultSet.getString("Title");
+                String description = resultSet.getString("Description");
+
+                WebCast temp = new WebCast();
+                temp.setID(Integer.valueOf(ID));
+                temp.setTitle(title);
+                temp.setDescription(description);
+                webcastTable.getItems().add(temp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        layout.setCenter(webcastTable);
         layout.autosize();
         return new Scene(layout);
     }
