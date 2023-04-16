@@ -22,11 +22,29 @@ VALUES ('TestCourse', convert(date, '14/04/2023', 103), 'InProgress', 1)
 INSERT INTO ContentItem (CourseName, PublicationDate, Status, ContentItemID)
 VALUES ('Programmeren 1', convert(date, '14/04/2023', 103), 'InProgress', 2)
 
+INSERT INTO ContentItem (CourseName, PublicationDate, Status, ContentItemID)
+VALUES ('Programmeren 1', convert(date, '14/04/2023', 103), 'InProgress', 3)
+
+INSERT INTO ContentItem (CourseName, PublicationDate, Status, ContentItemID)
+VALUES ('Programmeren 1', convert(date, '14/04/2023', 103), 'InProgress', 4)
+
+INSERT INTO ContentItem (CourseName, PublicationDate, Status, ContentItemID)
+VALUES ('Programmeren 1', convert(date, '14/04/2023', 103), 'InProgress', 5)
+
 INSERT INTO Module (ContentItemID, Title, Version, Description, ContactName, ContactEmail, TrackingID)
 VALUES (1, 'The basics of testing', 1, 'In this module you will learn how to create, read, update and delete data', 'John Test', 'j.test@avans.nl', 1)
 
-INSERT INTO Webcast (Title, ContentItemID, Description, Speaker, Orginisation, ViewCount)
+INSERT INTO Webcast (Title, ContentItemID, Description, Speaker, Organisation, ViewCount)
 VALUES ('Programmeren: The basics', 2, 'Een korte video over de basics', 'Arno Broeders', 'Avans', 42069)
+
+INSERT INTO Webcast (Title, ContentItemID, Description, Speaker, Organisation, ViewCount)
+VALUES ('Programmeren: Variables', 3, 'Een korte video over de basics', 'Arno Broeders', 'Avans', 69420)
+
+INSERT INTO Webcast (Title, ContentItemID, Description, Speaker, Organisation, ViewCount)
+VALUES ('Programmeren: Functions', 4, 'Een korte video over de basics', 'Arno Broeders', 'Avans', 8383)
+
+INSERT INTO Webcast (Title, ContentItemID, Description, Speaker, Organisation, ViewCount)
+VALUES ('Programmeren (optional): Complex algorithms', 5, 'Een lange video of zeer complexe algoritmes', 'Arno Broeders', 'Avans', 4)
 
 INSERT INTO Enrollment (StudentEmail, CourseName, EnrollmentDate)
 VALUES ('j.arbuckle@student.avans.nl', 'Programmeren 1', convert(date, '14/04/2023', 103))

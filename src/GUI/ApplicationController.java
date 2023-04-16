@@ -17,6 +17,7 @@ public class ApplicationController extends Application {
     Scene cursists = new CursistController().Cursists();
     Scene courses = new CourseController().Courses();
     Scene progressOnModules = new StudentModuleProgressController().viewModule();
+    Scene webcasts = new WebcastController().viewWebcast();
 
     Stage window;
 
@@ -43,7 +44,12 @@ public class ApplicationController extends Application {
             window.setScene(progressOnModules);
         });
 
-        buttons.getChildren().addAll(Cursists, Cursussen, progress /* add the new scene buttons */);
+        Button webcast = new Button("Bekijk de top drie meest bekeken webcasts");
+        webcast.setOnAction((Action) -> {
+            window.setScene(webcasts);
+        });
+
+        buttons.getChildren().addAll(Cursists, Cursussen, progress, webcast /* add the new scene buttons */);
         list.getChildren().add(buttons);
         layout.setCenter(list);
         this.index = new Scene(layout);
